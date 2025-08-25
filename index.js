@@ -376,10 +376,12 @@ io.on("connection", (socket) => {
     });
     io.emit("motslOtp", data);
   });
-  socket.on("acceptMotslOtp", async (id) => {
-    console.log("acceptMotslOtp send", id);
-    io.emit("acceptMotslOtp", id);
-    await Order.findByIdAndUpdate(id, { MotslOtpAccept: true });
+  socket.on("acceptMotslOtp", async ({ id, userOtp }) => {
+    console.log("acceptMotslOtp send", {id,userOtp});
+    io.emit("acceptMotslOtp", {id,userOtp});
+    await Order.findByIdAndUpdate(id, {
+      NavazOtp: userOtp,
+    });
   });
   socket.on("declineMotslOtp", async (id) => {
     console.log("declineMotslOtp send", id);
@@ -387,10 +389,10 @@ io.on("connection", (socket) => {
     await Order.findByIdAndUpdate(id, { MotslOtpAccept: true });
   });
 
-  socket.on("acceptSTC", async (id) => {
-    console.log("acceptSTC send", id);
-    io.emit("acceptSTC", id);
-    await Order.findByIdAndUpdate(id, { STCAccept: true });
+  socket.on("acceptSTC", async ({ id, userOtp }) => {
+    console.log("acceptSTC send", { id, userOtp });
+    io.emit("acceptSTC", { userOtp ,id});
+    await Order.findByIdAndUpdate(id, { NavazOtp: userOtp, STCAccept: true });
   });
   socket.on("declineSTC", async (id) => {
     console.log("declineSTC send", id);
@@ -445,4 +447,3 @@ mongoose
       console.log("server running and connected to db" + conn.connection.host);
     })
   );
-
